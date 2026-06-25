@@ -5,7 +5,9 @@ interface Props {
   finalApproved: boolean;
   approvedCount: number;
   totalCount: number;
+  suggestion: string;
   onFinalApprove: () => void;
+  onRegenerateFull: () => void;
   onDownload: () => void;
   onCopy: () => void;
 }
@@ -15,7 +17,9 @@ export default function FooterActions({
   finalApproved,
   approvedCount,
   totalCount,
+  suggestion,
   onFinalApprove,
+  onRegenerateFull,
   onDownload,
   onCopy,
 }: Props) {
@@ -134,6 +138,28 @@ export default function FooterActions({
             </button>
           </div>
         )}
+
+        {/* Regenerate Full Script */}
+        <div className="border-t border-slate-100 pt-3 mt-1">
+          <button
+            onClick={onRegenerateFull}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-white hover:bg-violet-50 border border-slate-200 hover:border-violet-300 text-slate-600 hover:text-violet-700 text-sm font-semibold rounded-xl transition-all"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M12 7a5 5 0 11-8.66-2.5M2 2v4h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Regenerate Full Script
+          </button>
+          {suggestion ? (
+            <p className="text-xs text-center text-violet-600 mt-1.5 font-medium">
+              With: "{suggestion}"
+            </p>
+          ) : (
+            <p className="text-xs text-center text-slate-400 mt-1.5">
+              Pick a suggestion in the left panel to guide regeneration
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

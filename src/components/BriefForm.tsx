@@ -1,12 +1,23 @@
 import { useState } from 'react';
 import { Brief } from '../types';
 
+const REGEN_SUGGESTIONS = [
+  'Make everything more beginner-friendly',
+  'Increase depth for advanced learners',
+  'Add more code examples throughout',
+  'Add more real-world analogies',
+  'Focus on production use cases',
+  'Shorten and tighten the pacing',
+];
+
 interface Props {
   onGenerate: (brief: Brief) => void;
   loading: boolean;
+  suggestion: string;
+  onSuggestionChange: (s: string) => void;
 }
 
-export default function BriefForm({ onGenerate, loading }: Props) {
+export default function BriefForm({ onGenerate, loading, suggestion, onSuggestionChange }: Props) {
   const [topic, setTopic] = useState('PostgreSQL Indexing');
   const [agendaText, setAgendaText] = useState(
     'Why Indexes Exist\nB-Tree Internals\nHash Indexes\nComposite Indexes\nQuery Planner Basics'
@@ -132,6 +143,47 @@ export default function BriefForm({ onGenerate, loading }: Props) {
             className="input resize-none"
           />
         </Field>
+
+        {/* Regeneration Suggestion */}
+        <div className="space-y-2 pt-1">
+          <div className="flex items-baseline justify-between">
+            <label className="field-label">Regeneration Suggestion</label>
+            <span className="text-xs text-slate-400">optional</span>
+          </div>
+          <p className="text-xs text-slate-400 -mt-1">
+            Pick a direction for full script regeneration
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {REGEN_SUGGESTIONS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => onSuggestionChange(suggestion === s ? '' : s)}
+                className={`text-xs px-2.5 py-1.5 rounded-full border font-medium transition-all ${
+                  suggestion === s
+                    ? 'bg-violet-50 border-violet-300 text-violet-700'
+                    : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100 hover:border-slate-300'
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+          {suggestion && (
+            <div className="flex items-center justify-between bg-violet-50 border border-violet-200 rounded-xl px-3 py-2">
+              <span className="text-xs text-violet-700 font-medium truncate">{suggestion}</span>
+              <button
+                type="button"
+                onClick={() => onSuggestionChange('')}
+                className="text-violet-400 hover:text-violet-600 ml-2 flex-shrink-0"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="px-5 py-4 border-t border-slate-100 flex-shrink-0">

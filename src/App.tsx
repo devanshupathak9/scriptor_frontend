@@ -20,17 +20,40 @@ export default function App() {
   const [finalApproved, setFinalApproved] = useState(false);
   const [regen, setRegen] = useState<RegenState>({ open: false, segmentId: '', segmentTitle: '' });
   const [regenLoading, setRegenLoading] = useState(false);
+  const [suggestion, setSuggestion] = useState('');
+  const [lastBrief, setLastBrief] = useState<Brief | null>(null);
 
   const handleGenerate = async (brief: Brief) => {
     setLoading(true);
     setError(null);
     setScript(null);
     setFinalApproved(false);
+    setLastBrief(brief);
     try {
       const result = await api.generateScript(brief);
       setScript(result);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to generate script. Is the backend running?');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApproveAll = () => {
+    if (!script) return;
+    setScript({ ...script, segments: script.segments.map((s) => ({ ...s, approved: true })) });
+  };
+
+  const handleRegenerateFull = async () => {
+    if (!lastBrief) return;
+    setLoading(true);
+    setError(null);
+    setFinalApproved(false);
+    try {
+      const result = await api.generateScript(lastBrief);
+      setScript(result);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to regenerate script. Is the backend running?');
     } finally {
       setLoading(false);
     }
@@ -122,7 +145,12 @@ export default function App() {
       <div className="flex flex-1 overflow-hidden">
         {/* Left panel — brief form */}
         <aside className="w-[340px] min-w-[300px] flex-shrink-0 bg-white border-r border-slate-200 flex flex-col overflow-hidden">
-          <BriefForm onGenerate={handleGenerate} loading={loading} />
+          <BriefForm
+            onGenerate={handleGenerate}
+            loading={loading}
+            suggestion={suggestion}
+            onSuggestionChange={setSuggestion}
+          />
         </aside>
 
         {/* Right panel — script viewer */}
@@ -147,10 +175,13 @@ export default function App() {
             <ScriptViewer
               script={script}
               finalApproved={finalApproved}
+              suggestion={suggestion}
               onApproveSegment={handleApproveSegment}
+              onApproveAll={handleApproveAll}
               onOpenRegen={handleOpenRegen}
               onSegmentEdit={patchSegment}
               onFinalApprove={handleFinalApprove}
+              onRegenerateFull={handleRegenerateFull}
               onDownload={handleDownload}
               onCopy={handleCopy}
             />
