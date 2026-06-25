@@ -1,11 +1,14 @@
 import { Brief, Script, Segment } from '../types';
 
-const BASE: string = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const BASE: string = import.meta.env.VITE_API_URL ?? 'https://valene-downier-melodie.ngrok-free.dev';
 
 async function post<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': 'true',
+    },
     body: JSON.stringify(body),
   });
   if (!res.ok) {
