@@ -151,7 +151,7 @@ export default function BriefForm({ onGenerate, loading, suggestion, onSuggestio
             <span className="text-xs text-slate-400">optional</span>
           </div>
           <p className="text-xs text-slate-400 -mt-1">
-            Pick a direction for full script regeneration
+            Pick a chip or type your own — used when regenerating the full script
           </p>
           <div className="flex flex-wrap gap-1.5">
             {REGEN_SUGGESTIONS.map((s) => (
@@ -169,20 +169,26 @@ export default function BriefForm({ onGenerate, loading, suggestion, onSuggestio
               </button>
             ))}
           </div>
-          {suggestion && (
-            <div className="flex items-center justify-between bg-violet-50 border border-violet-200 rounded-xl px-3 py-2">
-              <span className="text-xs text-violet-700 font-medium truncate">{suggestion}</span>
+          <div className="relative">
+            <input
+              type="text"
+              value={suggestion}
+              onChange={(e) => onSuggestionChange(e.target.value)}
+              placeholder="Or type a custom suggestion…"
+              className={`input pr-8 ${suggestion ? 'border-violet-300 ring-1 ring-violet-200 bg-violet-50 placeholder:text-violet-300' : ''}`}
+            />
+            {suggestion && (
               <button
                 type="button"
                 onClick={() => onSuggestionChange('')}
-                className="text-violet-400 hover:text-violet-600 ml-2 flex-shrink-0"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-violet-400 hover:text-violet-600 transition-colors"
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                   <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
