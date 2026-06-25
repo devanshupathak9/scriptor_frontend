@@ -12,7 +12,7 @@ export default function Header() {
           </svg>
         </div>
         <div>
-          <h1 className="text-sm font-semibold text-white tracking-tight leading-none">Drafter</h1>
+          <h1 className="text-sm font-semibold text-white tracking-tight leading-none">Scriptor</h1>
           <p className="text-xs text-slate-400 mt-0.5">Class Script Authoring Pipeline</p>
         </div>
       </div>
